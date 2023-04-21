@@ -2,51 +2,69 @@ import ast, copy
 import sys
 import astunparse
 
-class toFuncLower(ast.NodeTransformer):
+class VisitorWithContext(object):
 
     def __init__(self):
-        self.changed = set()
+        self.parents = []
 
-    def visit_FunctionDef(self, node):
-        self.changed.add(node.name)
-        n = copy.deepcopy(node)
-        n.name = node.name.lower().replace("_","")
-        self.generic_visit(n)
-        return n
-
-    def visit_Assign(self, node):
-        n = copy.deepcopy(node)
-        tgts = []
-        for t in n.targets:
-            self.changed.add(t.id)
-            nm = copy.deepcopy(t)
-            tgts.append(nm)
-            print('renaming' + t.id)
-            nm.id = t.id.lower().replace("_","")
-        n.targets = tgts
-        self.generic_visit(n)
-
-        return n
-
-    def helper(self, node):
-        self.changed.add(node.target.id)
-        n = copy.deepcopy(node)
-        x = copy.deepcopy(node.target)
-        x.id.lower().replace("_","")
-        n.target = x
-        self.generic_visit(n)
-        return n
+    def visit(self, node):
+        self.pre(node)
+        self.parents.append(node)
+        for child in ast.iter_child_nodes(node):
+            self.visit(child)
+        self.parents.pop()
+        self.post(node)
     
-    def visit_AugAssign(self, node):
-        n = self.helper(node)
-        return n
+    def pre(self, node):
+        pass
 
-    def visit_AnnAssign(self, node):
-        n = self.helper(node)
-        return n
+    def post(self, node):
+        pass
 
-    def get_changed(self):
-        return self.changed
+class CollectAllNames(VisitorWithContext):
+    def __init__(self):
+        self.changed = set()
+        VisitorWithContext.__init__(self)
+        
+    def is_assignment(self, p1, p2):
+        if isinstance(p1, ast.Assign):
+            for target in p1.targets:
+                if target == p2:
+                    return True
+        elif isinstance(p1, ast.AugAssign) or isinstance(p1, ast.AnnAssign):
+            if p1.target == p2:
+                return True
+
+        elif isinstance(p1, ast.FunctionDef):
+            return p1.name == p2
+
+        else:
+            return False
+
+    def has_assignment(self, node):
+        p2 = node
+        p1 = self.parents[-1]
+        while p1 is not None:
+            if isinstance(p1, ast.Subscript) and p2 != p1.value:
+                return False
+            
+            if self.is_assignment(p1, p2):
+                return True
+
+            if self.parents.index(p1)==0:
+                p2, p1 = p1, None
+            else:
+                p2, p1 = p1, self.parents[self.parents.index(p1)-1]
+
+        return False
+                
+    def pre(self, node):
+        if isinstance(node, ast.Name):
+            assert len(self.parents) != 0
+            if self.has_assignment(node):
+                self.changed.add(node.id)
+                
+    
 
 class toLowerAll(ast.NodeTransformer):
     
@@ -55,7 +73,6 @@ class toLowerAll(ast.NodeTransformer):
 
     def visit_Name(self, node):
         if node.id in self.changed:
-            print('changing node:' + node.id)
             n = copy.deepcopy(node)
             n.id = node.id.lower().replace("_","")
             return n
@@ -63,21 +80,25 @@ class toLowerAll(ast.NodeTransformer):
             return node
 
     def visit_Attribute(self, node):
+        self.generic_visit(node)
         if node.attr in self.changed:
-            n = copy.deepcopy(node)
-            print('changing attribute node:' + node.attr)
-            n.attr = node.attr.lower().replace("_","")
-            return n
+            node.attr = node.attr.lower().replace("_","")
+            return node
         else:
             return node
-
+        
+    
 with open(sys.argv[1]) as f:
     code = f.read()
     
-func = toFuncLower()
+names = CollectAllNames()
 thecode = ast.parse(code)
-thecode = ast.fix_missing_locations(func.visit(thecode))
-toLower = toLowerAll(func.get_changed())
+print(ast.dump(thecode, indent=4))
+
+names.visit(thecode)
+#print(names.changed)
+    
+toLower = toLowerAll(names.changed)
 thecode = ast.fix_missing_locations(toLower.visit(thecode))
 
 zz = astunparse.unparse(thecode)
