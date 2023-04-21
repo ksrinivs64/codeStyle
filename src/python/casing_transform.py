@@ -80,18 +80,21 @@ class toLowerAll(ast.NodeTransformer):
             return node
 
     def visit_Attribute(self, node):
+        self.generic_visit(node)
         if node.attr in self.changed:
-            n = copy.deepcopy(node)
-            n.attr = node.attr.lower().replace("_","")
-            return n
+            node.attr = node.attr.lower().replace("_","")
+            return node
         else:
             return node
+        
     
 with open(sys.argv[1]) as f:
     code = f.read()
     
 names = CollectAllNames()
 thecode = ast.parse(code)
+print(ast.dump(thecode, indent=4))
+
 names.visit(thecode)
 #print(names.changed)
     
