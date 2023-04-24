@@ -26,13 +26,14 @@ function nextWord(str, start) {
 
     if (FNR == 1) {
 	for(j = 1; j < elt; j++) {
-	    columnNames[contents[j]] = j
+	    c = gensub(/^"?([^"]*)"?$/, "\\1", "", contents[j])
+            columnNames[c] = j
 	}
 
     } else {
-	name = gensub(/.*\/(.*)[.]py/, "\\1", "g", contents[columnNames["Filename"]])
+        name = gensub(/.*\/([^/]*)[.]py"?$/, "\\1", "g", contents[columnNames["Filename"]])
 
-	dir = gensub(/\/.*[.]py/, "", "g", contents[columnNames["Filename"]])
+        dir = gensub(/^"?(p[0-9]*)\/.*$/, "\\1", "g", contents[columnNames["Filename"]])
 	inpt = InputDir "/" dir "/input.txt"
 
 	prog = contents[columnNames[TestCol]]
