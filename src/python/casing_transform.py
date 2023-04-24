@@ -93,7 +93,7 @@ with open(sys.argv[1]) as f:
     
 names = CollectAllNames()
 thecode = ast.parse(code)
-print(ast.dump(thecode, indent=4))
+# print(ast.dump(thecode, indent=4))
 
 names.visit(thecode)
 #print(names.changed)
