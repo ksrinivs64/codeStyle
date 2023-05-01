@@ -36,23 +36,33 @@ function nextWord(str, start) {
         dir = gensub(/^"?(p[0-9]*)\/.*$/, "\\1", "g", contents[columnNames["Filename"]])
 	inpt = InputDir "/" dir "/input.txt"
 
-	prog = contents[columnNames[TestCol]]
-	prog = gensub(/'/, "\"", "g", gensub(/^"/, "", "g", gensub(/"$/, "", "g", prog)))
-	
-	status = system("bash ulimitit.sh 10 python -c $'" prog "' < " inpt " > " OutDir "/" name " 2> " OutDir "/" name ".err")
+	transformed_prog = contents[columnNames[TestCol]]
+	transformed_status = system("bash ulimitit.sh 10 python " transformed_prog " < " inpt " > " OutDir "/transformed_" dir "_" name " 2> " OutDir "/transformed_" dir "_" name ".err")
 
-	if (status == 0) {
-	    outpt = InputDir "/" dir "/output.txt"
+	original_prog = contents[columnNames["orig_file"]]
+	original_status = system("bash ulimitit.sh 10 python " original_prog " < " inpt " > " OutDir "/original_" dir "_" name " 2> " OutDir "/original_" dir "_" name ".err")
 
-	    check = system("diff " OutDir "/" name " " outpt)
+	if (transformed_status == 0 && original_status == 0) {
+	    purported_output = InputDir "/" dir "/output.txt"
 
-	    if (check == 0) {
-		print name " has identical output"
+	    transform_check = system("diff --ignore-space-change " OutDir "/transformed_" dir "_" name " " OutDir "/original_" dir "_" name)
+	    if (transform_check == 0) {
+		print dir "_" name " has identical output"
 	    } else {
-		print name " has different output"
+		print dir "_" name " has different output"
+	    }
+
+	    purported_check = system("diff --ignore-space-change " OutDir "/transformed_" dir "_" name " " purported_output)
+	    if (purported_check != 0) {
+		print dir "_" name " has different purported output"
 	    }
 	} else {
-	    print name " failed to run"
+	    if (original_status != 0) {
+		print "original " dir "_" name " failed to run"
+	    }
+	    if (transformed_status != 0) {
+		print "transformed " dir "_" name " failed to run"
+	    }
 	}
     }
 }
