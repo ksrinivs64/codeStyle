@@ -26,9 +26,12 @@ class CollectAllNames(VisitorWithContext):
     def __init__(self):
         self.changed = set()
         self.existing = set()
+        self.args = set()
+        self.not_assignments = set()
         VisitorWithContext.__init__(self)
         
     def is_assignment(self, p1, p2):
+        
         if isinstance(p1, ast.Assign):
             for target in p1.targets:
                 if target == p2:
@@ -39,8 +42,7 @@ class CollectAllNames(VisitorWithContext):
 
         elif isinstance(p1, ast.FunctionDef):
             for arg in p1.args.args:
-                self.existing.add(arg.arg)
-                
+                self.args.add(arg.arg)
             return p1.name == p2
 
         else:
@@ -67,33 +69,44 @@ class CollectAllNames(VisitorWithContext):
         if isinstance(node, ast.Name):
             self.existing.add(node.id)
             assert len(self.parents) != 0
-            if self.has_assignment(node) and node.id != '_':
+            if self.has_assignment(node) and not node.id.startswith('_'):
                 self.changed.add(node.id)
-                
+        if isinstance(node, ast.Attribute):
+            self.not_assignments.add(node.attr)
     
 
 class toLowerAll(ast.NodeTransformer):
     
-    def __init__(self, changed, existing):
+    def __init__(self, changed, existing, args, not_assignments):
         self.changed = changed
         self.existing = existing
+        self.args = args
+        self.not_assignments = not_assignments
         reserved = ['False','def', 'if','raise', 'None', 'del', 'import','return', 'True', 'elif','in','try', 'and', 'else', 'is', 'while', 'as', 'except', 'lambda', 'with', 'assert','finally', 'nonlocal', 'yield','break','for','not','class', 'from','or', 'continue', 'global','pass']
         self.existing.update(reserved)
+        self.actual_changes = {}
+        self.changed_file = False
 
     def visit_Name(self, node):
         new_id = node.id.lower().replace("_","")
-        if node.id in self.changed and new_id not in self.existing and node.id not in self.existing:
-            n = copy.deepcopy(node)
-            n.id = node.id.lower().replace("_","")
-            return n
+        if node.id in self.changed and new_id not in self.existing and node.id not in self.args:
+            if new_id not in self.actual_changes or (new_id in self.actual_changes and self.actual_changes[new_id] == node.id):
+                self.actual_changes[new_id] = node.id
+                n = copy.deepcopy(node)
+                n.id = new_id
+                self.changed_file = True
+                return n
+            else:
+                return node
         else:
             return node
 
     def visit_Attribute(self, node):
         self.generic_visit(node)
         new_attr = node.attr.lower().replace("_","")
-        if node.attr in self.changed and new_attr not in self.existing:
+        if node.attr in self.changed and new_attr not in self.existing and node.attr not in self.not_assignments:
             node.attr = node.attr.lower().replace("_","")
+            self.changed_file = True
             return node
         else:
             return node
@@ -108,9 +121,13 @@ thecode = ast.parse(code)
 
 names.visit(thecode)
 #print(names.changed)
-    
-toLower = toLowerAll(names.changed, names.existing)
+
+toLower = toLowerAll(names.changed, names.existing, names.args, names.not_assignments)
+
 thecode = ast.fix_missing_locations(toLower.visit(thecode))
 
 zz = astunparse.unparse(thecode)
+
+if toLower.changed_file:
+    zz = '# File changed' + '\n' + zz
 print(zz)
