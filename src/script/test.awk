@@ -1,3 +1,5 @@
+@load "filefuncs"
+
 BEGIN {
     delete columnNames
 }
@@ -31,15 +33,18 @@ function nextWord(str, start) {
 	}
 
     } else {
-        name = gensub(/.*\/([^/]*)[.]py"?$/, "\\1", "g", contents[columnNames["Filename"]])
+        name = gensub(/.*\/([^/]*)[.]py"?$/, "\\1", "g", contents[columnNames["orig"]])
 
-        dir = gensub(/^"?(p[0-9]*)\/.*$/, "\\1", "g", contents[columnNames["Filename"]])
+        dir = gensub(/^.*\/(p[0-9]*)\/.*$/, "\\1", "g", contents[columnNames["orig"]])
 	inpt = InputDir "/" dir "/input.txt"
 
 	transformed_prog = contents[columnNames[TestCol]]
+	if (stat(transformed_prog, garbage) != 0) {
+	    next
+	}
 	transformed_status = system("bash ulimitit.sh 10 python " transformed_prog " < " inpt " > " OutDir "/transformed_" dir "_" name " 2> " OutDir "/transformed_" dir "_" name ".err")
 
-	original_prog = contents[columnNames["orig_file"]]
+	original_prog = contents[columnNames["orig"]]
 	original_status = system("bash ulimitit.sh 10 python " original_prog " < " inpt " > " OutDir "/original_" dir "_" name " 2> " OutDir "/original_" dir "_" name ".err")
 
 	if (transformed_status == 0 && original_status == 0) {
@@ -56,6 +61,14 @@ function nextWord(str, start) {
 	    if (purported_check != 0) {
 		print dir "_" name " has different purported output"
 	    }
+
+	    if (transform_check == 0) {
+		system("rm " OutDir "/original_" dir "_" name)
+		system("rm " OutDir "/original_" dir "_" name ".err")
+		system("rm " OutDir "/transformed_" dir "_" name)
+		system("rm " OutDir "/transformed_" dir "_" name ".err")
+	    }
+	    
 	} else {
 	    if (original_status != 0) {
 		print "original " dir "_" name " failed to run"
