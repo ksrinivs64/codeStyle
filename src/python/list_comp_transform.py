@@ -76,16 +76,28 @@ def for_loop(text):
     except:
         pass
     
-    return ast.unparse(parsed)
+    return astunparse.unparse(parsed)
 
 if __name__ == "__main__":
     import pandas as pd
-    df = pd.read_csv("/Users/kakateus.ibm.com/Downloads/codenet_transforms_fixed/codenet_comp_remove.csv")
-    for row in df.iteritems():
-        with open(sys.argv[1]) as f:
-            code = f.read()
+    df = pd.read_csv("/home/ksrinivs/codeStyle/src/python/casing_transform.csv")
+    records_dict = []
+    for i, row in df.iterrows():
+        try:
+            with open(row['orig']) as f:
+                code = f.read()
+                transformed_code = for_loop(code)
+                f_out = open(row['orig'][:-3]+"_transformed_uncomp.py", "w")
+                f_out.write(transformed_code)
+                print(row['orig'])
+                records_dict.append({'orig':row['orig'],
+                        'transform':row['orig'][:-3]+"_transformed_uncomp.py"})
+            #if i==1000:
+            #    break
+        except FileNotFoundError:
+            print("file not found", row['orig'])
+            continue
+    df_out = pd.DataFrame.from_records(records_dict)
+    df_out.to_csv("out.csv")
             
 
-    df['no_comp_content'] = df['uncommented_content'].apply(for_loop)
-    df.to_csv("/Users/kakateus.ibm.com/Downloads/codenet_transforms_fixed/codenet_comp_remove_fixed.csv")
-    #print(for_loop(df[df['Filename']=="p02618/s004826572.py"]['uncommented_content'].iloc[0]))
