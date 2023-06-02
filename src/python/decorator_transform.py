@@ -1,12 +1,20 @@
 import ast
 import pandas as pd
 from tqdm import tqdm
-
+import os
 import astunparse
 class toFuncLower(ast.NodeTransformer):
     def visit_FunctionDef(self, node):
         node.decorator_list = []
         return node
+    def visit_AsyncFunctionDef(self, node):
+        node.decorator_list = []
+        #print("async decorators stripped")
+        return node
+    def visit_ClassDef(self, node):
+        node.decorator_list = []
+        #print("async classes")
+        return node    
         # return ast.FunctionDef(**{**node.__dict__, 'name':node.name.lower().replace("_","")})
 
 
@@ -30,26 +38,17 @@ def remove_decorator(input_code):
 
 
 if __name__ == "__main__":
-    df = pd.read_csv("/home/ksrinivs/codeStyle/src/python/casing_transform.csv")
-    records_dict = []
-    for i, row in df.iterrows():
-        try:
-            with open(row['orig']) as f:
-                code = f.read()
-                transformed_code = remove_decorator(code)
-                f_out = open(row['orig'][:-3]+"_transformed_decorators.py", "w")
-                if transformed_code is not None:
-                    f_out.write("# File changed\n")
-                    f_out.write(transformed_code)
-                else:
-                    f_out.write(code)
-                print(row['orig'])
-                records_dict.append({'orig':row['orig'],
-                        'transform':row['orig'][:-3]+"_transformed_decorators.py"})
-            #if i==1000:
-            #    break
-        except FileNotFoundError:
-            print("file not found", row['orig'])
-            continue
-    df_out = pd.DataFrame.from_records(records_dict)
-    df_out.to_csv("out_decorators.csv")
+    processed_scripts = []
+    #print(os.listdir('.'))
+    #data_input = pd.read_csv(
+    #with open("test_dec.py", "r", encoding="utf-8") as f:
+    #    test_ex = f.read()
+    #processed_script = remove_decorator(test_ex)
+    #print (processed_script)
+    data_input = pd.read_csv("C:\\Capstone Project\\code-style-probing\\data\\labeled_code\\bq_uncommented_outlier.csv")
+    print("Length of input data : ", len(data_input))
+    for data in tqdm(data_input["content"]):
+        processed_script = remove_decorator(data)
+        processed_scripts.append(processed_script)
+    data_input["decorator_modified"] = processed_scripts
+    data_input.to_csv("C:\\Capstone Project\\code-style-probing\\data\\labeled_code\\bq_individual_no_decorators_neurips.csv")
