@@ -4,6 +4,7 @@ import sys
 import astunparse
 
 def for_loop(text):
+    changed_file = False
     def wrap_if(body, compare):
         return  ast.If(
                     test= compare,
@@ -56,7 +57,8 @@ def for_loop(text):
                     )] + \
                     for_loop_body_to_add + \
                     tree.body[i+1:]
-                i += 1   
+                changed_file = True
+                i += 1
             i += 1
             
        for i in getattr(tree, '_fields', []):
@@ -76,7 +78,7 @@ def for_loop(text):
     except:
         pass
     
-    return astunparse.unparse(parsed)
+    return astunparse.unparse(parsed), changed_file
 
 if __name__ == "__main__":
     import pandas as pd
@@ -86,8 +88,10 @@ if __name__ == "__main__":
         try:
             with open(row['orig']) as f:
                 code = f.read()
-                transformed_code = for_loop(code)
+                transformed_code, changed_file = for_loop(code)
                 f_out = open(row['orig'][:-3]+"_transformed_uncomp.py", "w")
+                if changed_file:
+                    f_out.write("# File changed\n")
                 f_out.write(transformed_code)
                 print(row['orig'])
                 records_dict.append({'orig':row['orig'],
