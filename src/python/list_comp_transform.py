@@ -2,6 +2,7 @@ import ast
 import uuid
 import sys
 import astunparse
+import traceback
 
 def for_loop(text):
     changed_file = False
@@ -20,7 +21,8 @@ def for_loop(text):
                     orelse = [])
     
     def comp_to_expl(tree):
-       if hasattr(tree, 'body'):
+        changed_file = False
+        if hasattr(tree, 'body'):
           i = 0
           while i < len(tree.body):
             if isinstance(a:=tree.body[i], ast.Assign) and isinstance(a.value, ast.ListComp):
@@ -58,26 +60,42 @@ def for_loop(text):
                     for_loop_body_to_add + \
                     tree.body[i+1:]
                 changed_file = True
+                print("The file should have changed")
                 i += 1
             i += 1
-            
        for i in getattr(tree, '_fields', []):
           if isinstance(v:=getattr(tree, i, None), list):
-             for i in v: 
-                comp_to_expl(i)
+             for i in v:
+                try:
+                    changed_file_1 = comp_to_expl(i)
+                    changed_file = changed_file | changed_file_1
+                except:
+                    pass
           elif isinstance(v, ast.AST):
-             comp_to_expl(v)
+             try:
+                 changed_file_1 = comp_to_expl(v)
+                 changed_file = changed_file | changed_file_1
+             except:
+                 pass
+       print("Now what is the value here?", changed_file)
+       return changed_file
 
     try:
         parsed = ast.parse(text)
     except:
-        return "Nan"
+        print("Exception in place 2")
+        return "Nan", False
     
     try:
-        comp_to_expl(parsed)
-    except:
+        changed_file = comp_to_expl(parsed)
+        print("did the file change here?", changed_file)
+    except BaseException as e:
+        traceback.print_exc()
+        print("Exception in place 1", changed_file)
+        #changed_file=False
         pass
     
+    print("I am returning", changed_file)
     return astunparse.unparse(parsed), changed_file
 
 if __name__ == "__main__":
@@ -91,13 +109,14 @@ if __name__ == "__main__":
                 transformed_code, changed_file = for_loop(code)
                 f_out = open(row['orig'][:-3]+"_transformed_uncomp.py", "w")
                 if changed_file:
+                    print("writing file changed")
                     f_out.write("# File changed\n")
                 f_out.write(transformed_code)
                 print(row['orig'])
                 records_dict.append({'orig':row['orig'],
                         'transform':row['orig'][:-3]+"_transformed_uncomp.py"})
-            #if i==1000:
-            #    break
+            if i==10000:
+                break
         except FileNotFoundError:
             print("file not found", row['orig'])
             continue
