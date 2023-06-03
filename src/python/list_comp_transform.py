@@ -63,22 +63,22 @@ def for_loop(text):
                 print("The file should have changed")
                 i += 1
             i += 1
-       for i in getattr(tree, '_fields', []):
-          if isinstance(v:=getattr(tree, i, None), list):
-             for i in v:
+        for i in getattr(tree, '_fields', []):
+            if isinstance(v:=getattr(tree, i, None), list):
+                for i in v:
+                    try:
+                        changed_file_1 = comp_to_expl(i)
+                        changed_file = changed_file | changed_file_1
+                    except:
+                        pass
+            elif isinstance(v, ast.AST):
                 try:
-                    changed_file_1 = comp_to_expl(i)
+                    changed_file_1 = comp_to_expl(v)
                     changed_file = changed_file | changed_file_1
                 except:
                     pass
-          elif isinstance(v, ast.AST):
-             try:
-                 changed_file_1 = comp_to_expl(v)
-                 changed_file = changed_file | changed_file_1
-             except:
-                 pass
-       print("Now what is the value here?", changed_file)
-       return changed_file
+        print("Now what is the value here?", changed_file)
+        return changed_file
 
     try:
         parsed = ast.parse(text)
