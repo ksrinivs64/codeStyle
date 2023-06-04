@@ -60,7 +60,6 @@ def for_loop(text):
                     for_loop_body_to_add + \
                     tree.body[i+1:]
                 changed_file = True
-                print("The file should have changed")
                 i += 1
             i += 1
         for i in getattr(tree, '_fields', []):
@@ -77,7 +76,6 @@ def for_loop(text):
                     changed_file = changed_file | changed_file_1
                 except:
                     pass
-        print("Now what is the value here?", changed_file)
         return changed_file
 
     try:
@@ -88,14 +86,11 @@ def for_loop(text):
     
     try:
         changed_file = comp_to_expl(parsed)
-        print("did the file change here?", changed_file)
     except BaseException as e:
         traceback.print_exc()
         print("Exception in place 1", changed_file)
-        #changed_file=False
         pass
     
-    print("I am returning", changed_file)
     return astunparse.unparse(parsed), changed_file
 
 if __name__ == "__main__":
@@ -115,8 +110,8 @@ if __name__ == "__main__":
                 print(row['orig'])
                 records_dict.append({'orig':row['orig'],
                         'transform':row['orig'][:-3]+"_transformed_uncomp.py"})
-            if i==10000:
-                break
+            #if i==10000:
+            #    break
         except FileNotFoundError:
             print("file not found", row['orig'])
             continue
