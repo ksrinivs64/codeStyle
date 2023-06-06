@@ -1,4 +1,7 @@
 import ast
+import pandas as pd
+import tqdm
+
 test = "import ast\n class MyClass: \n\t\"\"\"A simple example class\"\"\" \n\ti = 12345 # le epic comment\n\tVAR = 1 \n\tWhoa = [i + 1 for i in range(0,10)]\n\n\tdef f(self):\n\t\treturn 'hello world'"
 print (test)  #"\"\"\"start doc\"\"\"\n
 #import astor
@@ -41,3 +44,23 @@ def undocstring(source):
     except:
         parsed = 'nan'
         return parsed
+
+if __name__ == "__main__":
+
+    data_input = pd.read_csv("codenet_subset.csv")
+    print("Length of input data : ", len(data_input))
+    data_output = []
+    for file_name in tqdm(data_input["orig"]):
+        with open(file_name) as f:
+            data = f.read()
+        processed_script = undocstring(data)
+        with open(file_name[:-3]+"_docstring_transform.py", "w") as f:
+            if processed_script is None:
+                f.write(data)
+            else:
+                print("file changed")
+                f.write("# File changed\n")
+                f.write(processed_script)
+        data_output.append({"orig":file_name, "transform":file_name[:-3]+"_docstring_transform.py"})
+    out_df = pd.DataFrame.from_records(data_output, columns = ['orig', 'transform'])
+    out_df.to_csv("docstrings_codenet_subset.csv")
