@@ -13,7 +13,7 @@ def undocstring(source):
             print("Node is : ",node)
             #print("Node value is : ",node.body[0].value.s)
                     
-            if not isinstance(node, (ast.Module)): #, ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef
+            if not isinstance(node, (ast.Module, ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef)):
                 continue
 
             if not len(node.body):
