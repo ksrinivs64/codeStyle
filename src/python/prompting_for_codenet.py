@@ -1,8 +1,6 @@
 import os
 from typing import Counter
-import openai
 import pandas as pd
-from openai.error import InvalidRequestError
 import time
 import re
 import sys
@@ -45,7 +43,6 @@ task_params = {
         'control_prompt':"Add docstrings to code:"},#TODO: check
 
 }
-df = df.dropna(subset = [task_params[task_name]['orig_text_col'], task_params[task_name]['transformed_col']])
 
 def get_generated_text(api_key, prompt, max_new_tokens=100, model_id='salesforce/codegen-16b-mono', stop_sequences=None):
     headers = {
@@ -601,9 +598,9 @@ def get_model_output(df, orig_text_col, transformed_col, control_prompt, num_sho
                     if generated_code_list is not None:
                         for j, generated_code in enumerate(generated_code_list):
                             with open(row_list[j]['transform']) as f:
-                                orig_code_j = row_list[j]['transform']
+                                orig_code_j = f.read()
                             with open(row_list[j]['orig']) as f:
-                                transformed_code_j = row_list[j]['orig']
+                                transformed_code_j = f.read()
                             output.append({'inputs':orig_code_j, 'preds':postprocess_output(generated_code["generated_text"]), 'labels':transformed_code_j})
                             count = count+1
                             print(count)
