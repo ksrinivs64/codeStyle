@@ -1,6 +1,6 @@
 import ast
 import pandas as pd
-import tqdm
+from tqdm import tqdm
 
 test = "import ast\n class MyClass: \n\t\"\"\"A simple example class\"\"\" \n\ti = 12345 # le epic comment\n\tVAR = 1 \n\tWhoa = [i + 1 for i in range(0,10)]\n\n\tdef f(self):\n\t\treturn 'hello world'"
 print (test)  #"\"\"\"start doc\"\"\"\n
@@ -63,4 +63,4 @@ if __name__ == "__main__":
                 f.write(processed_script)
         data_output.append({"orig":file_name, "transform":file_name[:-3]+"_docstring_transform.py"})
     out_df = pd.DataFrame.from_records(data_output, columns = ['orig', 'transform'])
-    out_df.to_csv("docstrings_codenet_subset.csv")
+    out_df.to_csv("docstring_codenet_subset.csv")
