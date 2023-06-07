@@ -3,4 +3,4 @@
 ulimit -t $1
 shift
 "$@"
-
+exit $?

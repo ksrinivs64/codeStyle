@@ -33,7 +33,7 @@ function nextWord(str, start) {
 	}
 
     } else {
-        name = gensub(/.*\/([^/]*)[.]py"?$/, "\\1", "g", contents[columnNames["orig"]])
+        name = gensub(/.*\/([^/]*)[.][a-z]*"?$/, "\\1", "g", contents[columnNames["orig"]])
 
         dir = gensub(/^.*\/(p[0-9]*)\/.*$/, "\\1", "g", contents[columnNames["orig"]])
 	inpt = InputDir "/" dir "/input.txt"
@@ -42,10 +42,10 @@ function nextWord(str, start) {
 	if (stat(transformed_prog, garbage) != 0) {
 	    next
 	}
-	transformed_status = system("bash ulimitit.sh 10 python " transformed_prog " < " inpt " > " OutDir "/transformed_" dir "_" name " 2> " OutDir "/transformed_" dir "_" name ".err")
+	transformed_status = system("bash ulimitit.sh 10 " RunIt " " transformed_prog " < " inpt " > " OutDir "/transformed_" dir "_" name " 2> " OutDir "/transformed_" dir "_" name ".err")
 
 	original_prog = contents[columnNames["orig"]]
-	original_status = system("bash ulimitit.sh 10 python " original_prog " < " inpt " > " OutDir "/original_" dir "_" name " 2> " OutDir "/original_" dir "_" name ".err")
+	original_status = system("bash ulimitit.sh 10 " RunIt " " original_prog " < " inpt " > " OutDir "/original_" dir "_" name " 2> " OutDir "/original_" dir "_" name ".err")
 
 	if (transformed_status == 0 && original_status == 0) {
 	    purported_output = InputDir "/" dir "/output.txt"
