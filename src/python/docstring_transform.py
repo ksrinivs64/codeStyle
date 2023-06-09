@@ -1,7 +1,7 @@
 import ast
 import pandas as pd
 from tqdm import tqdm
-
+import astunparse
 test = "import ast\n class MyClass: \n\t\"\"\"A simple example class\"\"\" \n\ti = 12345 # le epic comment\n\tVAR = 1 \n\tWhoa = [i + 1 for i in range(0,10)]\n\n\tdef f(self):\n\t\treturn 'hello world'"
 print (test)  #"\"\"\"start doc\"\"\"\n
 #import astor
@@ -38,10 +38,11 @@ def undocstring(source):
                 #print("node id is : ",node.id)
                 return ast.Name(**{**node.__dict__, 'id':node.id.lower()})
 
-        new_code = ast.unparse(parsed)#toLower().visit(parsed))
+        new_code = astunparse.unparse(parsed)#toLower().visit(parsed))
         #print(new_code)
         return new_code
-    except:
+    except BaseException as e:
+        print("Exception in docstring", e)
         parsed = 'nan'
         return parsed
 
@@ -55,7 +56,7 @@ if __name__ == "__main__":
             data = f.read()
         processed_script = undocstring(data)
         with open(file_name[:-3]+"_docstring_transform.py", "w") as f:
-            if processed_script is None:
+            if processed_script is None or processed_script == 'nan':
                 f.write(data)
             else:
                 print("file changed")
