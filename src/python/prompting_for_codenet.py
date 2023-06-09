@@ -597,11 +597,9 @@ def get_model_output(df, orig_text_col, transformed_col, control_prompt, num_sho
                     generated_code_list =response.json().get("results", None)
                     if generated_code_list is not None:
                         for j, generated_code in enumerate(generated_code_list):
-                            with open(row_list[j]['transform']) as f:
-                                orig_code_j = f.read()
-                            with open(row_list[j]['orig']) as f:
-                                transformed_code_j = f.read()
-                            output.append({'inputs':orig_code_j, 'preds':postprocess_output(generated_code["generated_text"]), 'labels':transformed_code_j})
+                            with open(row_list[j]['transform'][:-3]+"_prompting.py", "w") as f:
+                                f.write(postprocess_output(generated_code["generated_text"]))
+                            output.append({'orig':row_list[j]['transform'], 'transform':row_list[j]['transform'][:-3]+"_prompting.py"})
                             count = count+1
                             print(count)
                     else:
@@ -617,9 +615,9 @@ def get_model_output(df, orig_text_col, transformed_col, control_prompt, num_sho
                     errors[i] = str(e)
                 if count%10==0:
                     print(f"Done processing {count} rows out of {i+1} rows.")
-                    out_df = pd.DataFrame.from_records(output, columns = ['inputs', 'preds', 'labels'])
+                    out_df = pd.DataFrame.from_records(output, columns = ['orig', 'transform'])
                     out_df.to_csv(output_file_path, index=False)
-    out_df = pd.DataFrame.from_records(output, columns = ['inputs', 'preds', 'labels'])
+    out_df = pd.DataFrame.from_records(output, columns = ['orig', 'transform'])
     out_df.to_csv(output_file_path, index=False)
     print(errors)
     print(f"Successfully obtained model output for {count} rows. {err_count} number of errors.")
