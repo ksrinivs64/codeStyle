@@ -1,4 +1,5 @@
 import ast
+import astunparse
 import pandas as pd
 from tqdm import tqdm
 
@@ -9,7 +10,7 @@ def uncomment(source):
     Output: code (str)
     """
     try:
-        parse = ast.unparse(ast.parse(source))
+        parse = astunparse.unparse(ast.parse(source))
     except:
         parse = 'nan'
     return parse
@@ -24,7 +25,7 @@ if __name__ == "__main__":
             data = f.read()
         processed_script = uncomment(data)
         with open(file_name[:-3]+"_comment_transform.py", "w") as f:
-            if processed_script is None:
+            if processed_script is None or processed_script == 'nan':
                 f.write(data)
             else:
                 print("file changed")
