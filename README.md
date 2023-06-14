@@ -59,7 +59,7 @@ The output transformed files are written to the same paths with a suffix `_comme
 
 2. import Java code into a separate workspace
 
-3. run ExtractProjectRunner on the separate workspace
+3. run ExtractProjectRunner on the separate workspace.  Run either ExtractApplication or RenameApplication. Eclipse should prompt for a choice of these.
 
 
 ## Data Preprocessing For Finetuning
