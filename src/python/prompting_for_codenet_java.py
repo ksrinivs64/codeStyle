@@ -6,7 +6,9 @@ import re
 import sys
 import requests
 
-api_key = os.getenv("BAM_API_KEY")
+api_key = os.getenv("API_KEY")
+api_endpoint = os.getenv("API_ENDPOINT")
+
 eval_dataset_path=sys.argv[1]
 task_name = sys.argv[2]
 output_file_path = eval_dataset_path[:-4]+"_prompting_output.csv"
@@ -63,7 +65,7 @@ def get_generated_text(api_key, prompt, max_new_tokens=100, model_id='salesforce
         },
     }
 
-    response = requests.post('https://bam-api.res.ibm.com/v0/generate', headers=headers, json=json_data)#TODO:anonymize
+    response = requests.post(api_endpoint, headers=headers, json=json_data)
     return(response)
 
 def postprocess_output(model_output: str) -> str:
@@ -257,25 +259,8 @@ public class Main {
 """]}),
         "Replace for loops by list comprehension:":pd.DataFrame(data={"no_comp_content":["""lis = []
 for fruit in fruits:
-    lis.append(len(fruit))""",
-    """lis = []
-for fruit in fruits:
-    if len(fruit) == 5:
-        lis.append("yes")
-    else:
-        lis.append("no")""",
-        """lis = []
-for fruit in fruits:
     if len(fruit) >= 5:
-        lis.append(fruit)""",
-        """lis = []
-for f in fruits:
-    for r in recipes:
-        for s in sugar_levels:
-            lis.append(f + r + s)"""], "uncommented_content":["""lis = [len(fruit) for fruit in fruits]""",
-        """lis = ["yes" if len(fruit)==5 else "no" for fruit in fruits]""",
-        """lis = [fruit for fruit in fruits if len(fruit)>=5]""",
-        """lis = [f+r+s for f in fruits for r in recipes for s in sugar_levels]"""]}),
+        lis.append(fruit)"""], "uncommented_content":["""lis = [fruit for fruit in fruits if len(fruit)>=5]"""]}),
         "Change the casing of identifiers to language standard (PEP-8):":pd.DataFrame(data={"no_casing_content":["""from collections import defaultdict
 M = 998244353
 B = ((10 ** 18) % M)

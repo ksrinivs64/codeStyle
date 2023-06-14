@@ -1,4 +1,4 @@
-This repository contains the code to create the parallel corpora for the Code Style Benchmark (CSB).
+This repository contains the code to create the parallel corpora for the Code Style Benchmark (CSB) and the code for the experiments mentioned in the paper such as fine-tuning and few-shot prompting.
 
 The directory `src/python` contains the code for the Python transforms.
 
@@ -74,7 +74,7 @@ python split_long_data.py [train|eval]
 ```
 
 
-## End-to-End Training Pipeline Instruction
+## Fine-tuning using CodeT5
 ### 1. Parallel Corpus Tokenization
 
 Tokenizing and filtering out all the NULL value examples.
@@ -193,3 +193,16 @@ python evaluate_score.py \
 - is-nl-tokens-added: N/A
 - clean-diff: will clean some inconsistent characters caused by AST parse and unparse before calculating DiffBLEU
 
+## Few-shot Prompting
+
+The scripts `prompting_for_test_set.py`, `prompting_for_codenet.py`, and `prompting_for_codenet_java.py` all do the 1-shot prompting mentioned in the paper. 
+The main difference is the input data format. 
+Note that we use a proprietary API which hosts multiple models for inference, so we need two environment variables `API_KEY` and `API_ENDPOINT` to connect to that service.
+In theory, any model inferencing API can be used instead of this service.
+
+For example, `prompting_for_test_set.py` takes the evaluation dataset csv path from `eval_parallel_corpora_neurips.zip` and a task name as the two command line parameters.
+
+It can be run as follows:
+```
+python prompting_for_test_set.py <path_to_evaluation_dataset_csv> <task_name>
+```
