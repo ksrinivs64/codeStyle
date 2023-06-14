@@ -3,7 +3,6 @@ UCSC IBM Capstone dedicated to probing large language models for code style.
 - [Code Style Transfer & Probing](#code-style-transfer---probing)
   * [Data Preprocessing](#data-preprocessing)
     + [Raw Script Tokenization](#raw-script-tokenization)
-    + [Individual Feature Parallel Corpora Generation](#individual-feature-parallel-corpora-generation)
     + [Splitting Long Sequences](#splitting-long-sequences)
   * [End-to-End Training Pipeline Instruction](#end-to-end-training-pipeline-instruction)
     + [1. Parallel Corpus Tokenization](#1-parallel-corpus-tokenization)
@@ -24,15 +23,6 @@ The script is used for directly tokenizing the full dataset
 python tokenize_raw_script.py [train|eval]
 ```
 
-### Individual Feature Parallel Corpora Generation
-Generate all individual features of parallel corpora at once.
-```bash
-python parallel_corpora_gen_script.py \
-    INPUT_CSV_PATH \
-    OUTPUT_CSV_PATH
-```
-**INPUT_CSV_PATH**: the path for the input csv data, which will contain the raw script. The `evaluation_set.csv` gives the correct column names.
-**OUTPUT_CSV_PATH**: the path for the output file. It will be a csv file containing all the script that the individual features are transferred.
 
 ### Splitting Long Sequences
 For keeping dataset in the range of the max sequence length, use this script for filtering out the short sequence data and extracting function/class level codes out of the long sequences. The output will be 2 files: short and long datasets. 
@@ -49,7 +39,6 @@ Tokenizing and filtering out all the NULL value examples.
 python parallel_preprocessing_script.py FEATURES CSV_NAME OUTPUT_PATH
 ```
 
-**FEATURES**: Any combination of the feature that to be transferred and should be combined with `+`, i.e. casing+class+list_comp+comment+docstring
 
 **CSV_NAME**: CSV file that contains all individual features
 - **train set - casing:** `bq_data_uncased.csv`
@@ -78,12 +67,7 @@ python parallel_preprocessing_script.py \
     eval_set_individual_feat.csv \
     eval_class_dataset.hf
 
-# combined - eval only
-## i.e. class+list_comp
-python parallel_preprocessing_script.py \
-    class+list_comp \
-    eval_set_individual_feat.csv \
-    eval_class_list_comp_dataset.hf
+
 ```
 
 
@@ -143,7 +127,7 @@ combined_model_results/docstring.non_downsized.output.csv \
 The output will be a prediction file that contains input/prediction/label.
 > The removal of `codestylist` folder is because the trainer will create a foler automatically and will have error if we try to load the model from the hub, it will try to load from the empty folder created by trainer instead. So it is needed to remove the folder first no matter whether it exists.
 ### 4. Evaluation
-Please see `seq2seq_eval.ipynb`(individual) and `combined_seq2seq_eval.ipynb`(combined) for evaluation.
+Please see `seq2seq_eval.ipynb`(individual) for evaluation.
 
 #### Script Usage
 We now have a script `evaluate_score` for running the evaluation:
@@ -169,5 +153,5 @@ python evaluate_score.py \
 
 - PRED_DIR: You prediction csv file
 - OUTPUT_DIR: You score output json file name
-- is-nl-tokens-added: if true, will run preprocessing on removing nl prompt(combined model only)
+- is-nl-tokens-added: N/A
 - clean-diff: will clean some inconsistent characters caused by AST parse and unparse before calculating DiffBLEU
