@@ -95,7 +95,7 @@ def for_loop(text):
 
 if __name__ == "__main__":
     import pandas as pd
-    df = pd.read_csv("/home/ksrinivs/codeStyle/src/python/casing_transform.csv")
+    df = pd.read_csv(sys.argv[1])
     records_dict = []
     for i, row in df.iterrows():
         try:
@@ -116,6 +116,6 @@ if __name__ == "__main__":
             print("file not found", row['orig'])
             continue
     df_out = pd.DataFrame.from_records(records_dict)
-    df_out.to_csv("out.csv")
+    df_out.to_csv("list_comp_out.csv")
             
 
