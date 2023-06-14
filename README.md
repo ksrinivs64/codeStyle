@@ -53,6 +53,13 @@ python comment_transform.py <path_to_the_input_csv_file>
 
 The output transformed files are written to the same paths with a suffix `_comment_transform.py`
 
+### Corpora generation for Java
+
+1. import ExtractProjectRunner into a fresh Eclipse workspace.  Eclipse for Committers is the Eclipse version that should work
+
+2. import Java code into a separate workspace
+
+3. run ExtractProjectRunner on the separate workspace
 
 
 ## Data Preprocessing For Finetuning
