@@ -200,7 +200,7 @@ The main difference is the input data format.
 Note that we use a proprietary API which hosts multiple models for inference, so we need two environment variables `API_KEY` and `API_ENDPOINT` to connect to that service.
 In theory, any model inferencing API can be used instead of this service.
 
-For example, `prompting_for_test_set.py` takes the evaluation dataset csv path from `eval_parallel_corpora_neurips.zip` and a task name as the two command line parameters.
+For example, `prompting_for_test_set.py` takes the evaluation dataset csv path from `eval_parallel_corpora_neurips.zip` (this is uploaded to the [dataset link](https://zenodo.org/record/8021947)) and a task name as the two command line parameters.
 
 It can be run as follows:
 ```
