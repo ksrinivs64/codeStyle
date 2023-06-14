@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ExtractMethodRunner
+Bundle-SymbolicName: ExtractMethodRunner;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: extractmethodrunner.Activator
+Require-Bundle: org.eclipse.text,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.ltk.core.refactoring,
+ org.eclipse.jdt.core.manipulation,
+ org.eclipse.jdt.core,
+ org.eclipse.jdt.ui,
+ org.eclipse.core.filebuffers
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Automatic-Module-Name: ExtractMethodRunner
+Bundle-ActivationPolicy: lazy
