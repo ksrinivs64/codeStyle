@@ -1,5 +1,7 @@
 import ast
+import astunparse
 import pandas as pd
+import sys
 from tqdm import tqdm
 
 def uncomment(source):
@@ -9,14 +11,14 @@ def uncomment(source):
     Output: code (str)
     """
     try:
-        parse = ast.unparse(ast.parse(source))
+        parse = astunparse.unparse(ast.parse(source))
     except:
         parse = 'nan'
     return parse
 
 if __name__ == "__main__":
 
-    data_input = pd.read_csv("codenet_subset.csv")
+    data_input = pd.read_csv(sys.argv[1])
     print("Length of input data : ", len(data_input))
     data_output = []
     for file_name in tqdm(data_input["orig"]):
@@ -24,7 +26,7 @@ if __name__ == "__main__":
             data = f.read()
         processed_script = uncomment(data)
         with open(file_name[:-3]+"_comment_transform.py", "w") as f:
-            if processed_script is None:
+            if processed_script is None or processed_script == 'nan':
                 f.write(data)
             else:
                 print("file changed")
@@ -32,4 +34,4 @@ if __name__ == "__main__":
                 f.write(processed_script)
         data_output.append({"orig":file_name, "transform":file_name[:-3]+"_comment_transform.py"})
     out_df = pd.DataFrame.from_records(data_output, columns = ['orig', 'transform'])
-    out_df.to_csv("comment_codenet_subset.csv")
+    out_df.to_csv("comment_out.csv")

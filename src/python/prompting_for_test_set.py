@@ -1,6 +1,8 @@
 import os
 from typing import Counter
+import openai
 import pandas as pd
+from openai.error import InvalidRequestError
 import time
 import re
 import sys
@@ -45,6 +47,7 @@ task_params = {
         'control_prompt':"Add docstrings to code:"},#TODO: check
 
 }
+df = df.dropna(subset = [task_params[task_name]['orig_text_col'], task_params[task_name]['transformed_col']])
 
 def get_generated_text(api_key, prompt, max_new_tokens=100, model_id='salesforce/codegen-16b-mono', stop_sequences=None):
     headers = {
@@ -539,7 +542,7 @@ class IndexViews:
     }
     return examples_dict[control_prompt]
 
-def create_prompt(orig_code, sample_examples, orig_text_col, transformed_col, control_prompt):
+def create_prompt(row, sample_examples, orig_text_col, transformed_col, control_prompt):
     prompt = control_prompt+"\n"
     for _, sample in sample_examples.iterrows():
         prompt = prompt+"Original code:"
@@ -547,7 +550,7 @@ def create_prompt(orig_code, sample_examples, orig_text_col, transformed_col, co
         prompt = prompt+"\n\n"+"Transformed code:"
         prompt = prompt+"\n"+sample[transformed_col]+"\n\n"
     prompt = prompt + "Original code:"
-    prompt = prompt + "\n"+ orig_code
+    prompt = prompt + "\n"+ row[orig_text_col]
     prompt = prompt+"\n\n"+"Transformed code:\n"
     return prompt
 
@@ -564,12 +567,10 @@ def get_model_output(df, orig_text_col, transformed_col, control_prompt, num_sho
     for i, row in df.iterrows():
         if i>=0:
             sample_examples = get_sample_examples(control_prompt)
-            with open(row['transform']) as f:
-                orig_code = f.read()
-            code_prompt = create_prompt(orig_code, sample_examples, orig_text_col, transformed_col, control_prompt)
+            code_prompt = create_prompt(row, sample_examples, orig_text_col, transformed_col, control_prompt)
             #Compute max_tokens based on the source code num tokens
             #max_tokens = len(row[orig_text_col].split(" "))+100
-            max_tokens = len(re.sub('[=\t\n ]', '\n', orig_code).split("\n"))+300
+            max_tokens = len(re.sub('[=\t\n ]', '\n', row[orig_text_col]).split("\n"))+300
             if max_tokens > 1536:
                 max_tokens=1536
             #print(code_prompt)
@@ -582,9 +583,7 @@ def get_model_output(df, orig_text_col, transformed_col, control_prompt, num_sho
                     generated_code_list =response.json().get("results", None)
                     if generated_code_list is not None:
                         for j, generated_code in enumerate(generated_code_list):
-                            with open(row_list[j]['transform'][:-3]+"_prompting.py", "w") as f:
-                                f.write(postprocess_output(generated_code["generated_text"]))
-                            output.append({'orig':row_list[j]['transform'], 'transform':row_list[j]['transform'][:-3]+"_prompting.py"})
+                            output.append({'inputs':row_list[j][orig_text_col], 'preds':postprocess_output(generated_code["generated_text"]), 'labels':row_list[j][transformed_col]})
                             count = count+1
                             print(count)
                     else:
@@ -600,9 +599,9 @@ def get_model_output(df, orig_text_col, transformed_col, control_prompt, num_sho
                     errors[i] = str(e)
                 if count%10==0:
                     print(f"Done processing {count} rows out of {i+1} rows.")
-                    out_df = pd.DataFrame.from_records(output, columns = ['orig', 'transform'])
+                    out_df = pd.DataFrame.from_records(output, columns = ['inputs', 'preds', 'labels'])
                     out_df.to_csv(output_file_path, index=False)
-    out_df = pd.DataFrame.from_records(output, columns = ['orig', 'transform'])
+    out_df = pd.DataFrame.from_records(output, columns = ['inputs', 'preds', 'labels'])
     out_df.to_csv(output_file_path, index=False)
     print(errors)
     print(f"Successfully obtained model output for {count} rows. {err_count} number of errors.")

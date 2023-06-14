@@ -582,9 +582,9 @@ def get_model_output(df, orig_text_col, transformed_col, control_prompt, num_sho
                     generated_code_list =response.json().get("results", None)
                     if generated_code_list is not None:
                         for j, generated_code in enumerate(generated_code_list):
-                            with open(row_list[j]['transform'][:-3]+"_prompting.py", "w") as f:
+                            with open(row_list[j]['transform'][:-5]+"_prompting.java", "w") as f:
                                 f.write(postprocess_output(generated_code["generated_text"]))
-                            output.append({'orig':row_list[j]['transform'], 'transform':row_list[j]['transform'][:-3]+"_prompting.py"})
+                            output.append({'orig':row_list[j]['transform'], 'transform':row_list[j]['transform'][:-5]+"_prompting.java"})
                             count = count+1
                             print(count)
                     else:
