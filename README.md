@@ -201,6 +201,7 @@ Note that we use a proprietary API which hosts multiple models for inference, so
 In theory, any model inferencing API can be used instead of this service.
 
 For example, `prompting_for_test_set.py` takes the evaluation dataset csv path from `eval_parallel_corpora_neurips.zip` (this file can be found at the [CSB dataset location](https://zenodo.org/record/8021947)) and a task name as the two command line parameters.
+The task name can take one of these values: ['list_comp', 'decorators', 'casing_java', 'casing_python', 'docstrings', 'comments', 'method_extraction' (for code encapsulation)]
 
 It can be run as follows:
 ```
