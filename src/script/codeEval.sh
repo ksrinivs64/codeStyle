@@ -5,10 +5,10 @@ DIR=`dirname $ME`
 
 PTH=$1
 
-for INPUT in $PTH/*_inputs.py; do
+for INPUT in $PTH/*_input.py; do
     
-    OUTPUT=`echo $INPUT | gsed s/_inputs/_transform/`
-    EXPECTED=`echo $INPUT | gsed s/_inputs/_orig/`
+    OUTPUT=`echo $INPUT | sed s/_input/_output/g`
+    EXPECTED=`echo $INPUT | sed s/_input/_expected/g`
 
     FN=`basename $INPUT`
     echo -n "$FN "
