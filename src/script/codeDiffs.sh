@@ -3,7 +3,7 @@
 ME=$0
 DIR=`dirname $ME`
 
-WS=tmp
+WS=`mktemp -d`
 
 trap 'rm -rf $WS' EXIT
 
