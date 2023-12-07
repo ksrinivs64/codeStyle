@@ -1,13 +1,13 @@
 /data/codeStyle2/data/eval_data/codeT5_comment_summary.csv
 means
-expected_changes 1.125 +- 0.393
-missing_changes 0.0 +- 0.0
-unexpected_changes 2.938 +- 4.67
-gold_changes 1.125 +- 0.393
-expected_lines_changed 1.0 +- 0.0
-lines_changed_correctly_and_no_unexpected_changes 0.479 +- 0.505
-percent_expected_lines_changed 1.0 +- 0.0
-total 48
+expected_changes 2.919 +- 2.751
+missing_changes 2.811 +- 4.133
+unexpected_changes 0.612 +- 1.571
+gold_changes 5.73 +- 4.747
+expected_lines_changed 0.307 +- 0.461
+lines_changed_correctly_and_no_unexpected_changes 0.275 +- 0.447
+percent_expected_lines_changed 0.578 +- 0.364
+total 1095
 /data/codeStyle2/data/eval_data/codeT5_decorator_summary.csv
 means
 expected_changes 1.471 +- 1.261
@@ -80,14 +80,14 @@ percent_expected_lines_changed 0.456 +- 0.46
 total 694
 /data/codeStyle2/data/eval_data/prompt_comment_summary.csv
 means
-expected_changes nan +- nan
-missing_changes nan +- nan
-unexpected_changes nan +- nan
-gold_changes nan +- nan
-expected_lines_changed nan +- nan
-lines_changed_correctly_and_no_unexpected_changes nan +- nan
-percent_expected_lines_changed nan +- nan
-total 0
+expected_changes 3.157 +- 3.07
+missing_changes 2.573 +- 3.388
+unexpected_changes 1.226 +- 2.047
+gold_changes 5.73 +- 4.747
+expected_lines_changed 0.071 +- 0.257
+lines_changed_correctly_and_no_unexpected_changes 0.037 +- 0.19
+percent_expected_lines_changed 0.529 +- 0.294
+total 1095
 /data/codeStyle2/data/eval_data/prompt_decorator_summary.csv
 means
 expected_changes 0.922 +- 1.183
