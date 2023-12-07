@@ -1,0 +1,140 @@
+/data/codeStyle2/data/eval_data/codeT5_comment_summary.csv
+means
+expected_changes 0.312 +- 0.692
+missing_changes 2.688 +- 0.692
+unexpected_changes 3.218 +- 2.87
+gold_changes 5.73 +- 4.747
+expected_lines_changed 0.0 +- 0.0
+lines_changed_correctly_and_no_unexpected_changes 0.0 +- 0.0
+percent_expected_lines_changed 0.042 +- 0.099
+total 1095
+/data/codeStyle2/data/eval_data/codeT5_decorator_summary.csv
+means
+expected_changes 1.475 +- 1.269
+missing_changes 0.234 +- 0.586
+unexpected_changes 3.981 +- 3.24
+gold_changes 1.709 +- 1.251
+expected_lines_changed 0.815 +- 0.389
+lines_changed_correctly_and_no_unexpected_changes 0.0 +- 0.0
+percent_expected_lines_changed 0.855 +- 0.326
+total 10478
+/data/codeStyle2/data/eval_data/codeT5_docstring_summary.csv
+means
+expected_changes 0.222 +- 0.616
+missing_changes 2.778 +- 0.616
+unexpected_changes 3.06 +- 3.725
+gold_changes 1.633 +- 1.191
+expected_lines_changed 0.068 +- 0.252
+lines_changed_correctly_and_no_unexpected_changes 0.0 +- 0.0
+percent_expected_lines_changed 0.15 +- 0.45
+total 1710
+/data/codeStyle2/data/eval_data/codeT5_java_casing_summary.csv
+means
+expected_changes 5.273 +- 3.469
+missing_changes 0.72 +- 1.914
+unexpected_changes 0.711 +- 1.811
+gold_changes 5.992 +- 3.71
+expected_lines_changed 0.81 +- 0.393
+lines_changed_correctly_and_no_unexpected_changes 0.65 +- 0.477
+percent_expected_lines_changed 0.901 +- 0.242
+total 5988
+/data/codeStyle2/data/eval_data/codeT5_list_comp_summary.csv
+means
+expected_changes 3.761 +- 1.391
+missing_changes 0.021 +- 0.266
+unexpected_changes 0.082 +- 0.546
+gold_changes 3.782 +- 1.423
+expected_lines_changed 0.992 +- 0.091
+lines_changed_correctly_and_no_unexpected_changes 0.966 +- 0.18
+percent_expected_lines_changed 0.997 +- 0.036
+total 477
+/data/codeStyle2/data/eval_data/codeT5_python_casing_summary.csv
+means
+expected_changes 5.196 +- 3.581
+missing_changes 0.415 +- 1.427
+unexpected_changes 0.151 +- 0.782
+gold_changes 5.611 +- 3.62
+expected_lines_changed 0.872 +- 0.335
+lines_changed_correctly_and_no_unexpected_changes 0.823 +- 0.381
+percent_expected_lines_changed 0.93 +- 0.205
+total 24400
+/data/codeStyle2/data/eval_data/codeT5_refactor_summary.csv
+means
+expected_changes 5.347 +- 4.144
+missing_changes 2.29 +- 3.412
+unexpected_changes 2.173 +- 3.865
+gold_changes 7.637 +- 4.405
+expected_lines_changed 0.516 +- 0.501
+lines_changed_correctly_and_no_unexpected_changes 0.367 +- 0.483
+percent_expected_lines_changed 0.721 +- 0.364
+total 248
+/data/codeStyle2/data/eval_data/prompt_casing_summary.csv
+means
+expected_changes 2.228 +- 3.213
+missing_changes 2.403 +- 3.157
+unexpected_changes 4.464 +- 6.176
+gold_changes 4.631 +- 3.733
+expected_lines_changed 0.365 +- 0.482
+lines_changed_correctly_and_no_unexpected_changes 0.027 +- 0.163
+percent_expected_lines_changed 0.463 +- 0.457
+total 694
+/data/codeStyle2/data/eval_data/prompt_comment_summary.csv
+means
+expected_changes 3.157 +- 3.07
+missing_changes 2.573 +- 3.388
+unexpected_changes 1.226 +- 2.047
+gold_changes 5.73 +- 4.747
+expected_lines_changed 0.071 +- 0.257
+lines_changed_correctly_and_no_unexpected_changes 0.037 +- 0.19
+percent_expected_lines_changed 0.529 +- 0.294
+total 1095
+/data/codeStyle2/data/eval_data/prompt_decorator_summary.csv
+means
+expected_changes 0.917 +- 1.184
+missing_changes 0.817 +- 1.218
+unexpected_changes 0.767 +- 2.085
+gold_changes 1.734 +- 1.312
+expected_lines_changed 0.498 +- 0.5
+lines_changed_correctly_and_no_unexpected_changes 0.441 +- 0.497
+percent_expected_lines_changed 0.535 +- 0.481
+total 990
+/data/codeStyle2/data/eval_data/prompt_docstring_summary.csv
+means
+expected_changes 0.193 +- 0.511
+missing_changes 1.44 +- 1.127
+unexpected_changes 0.514 +- 1.213
+gold_changes 1.633 +- 1.191
+expected_lines_changed 0.061 +- 0.24
+lines_changed_correctly_and_no_unexpected_changes 0.029 +- 0.169
+percent_expected_lines_changed 0.106 +- 0.268
+total 1710
+/data/codeStyle2/data/eval_data/prompt_java_casing_summary.csv
+means
+expected_changes 2.578 +- 3.817
+missing_changes 3.654 +- 4.086
+unexpected_changes 2.016 +- 7.168
+gold_changes 6.232 +- 4.287
+expected_lines_changed 0.325 +- 0.468
+lines_changed_correctly_and_no_unexpected_changes 0.099 +- 0.298
+percent_expected_lines_changed 0.399 +- 0.459
+total 4140
+/data/codeStyle2/data/eval_data/prompt_list_comp_summary.csv
+means
+expected_changes 1.631 +- 2.032
+missing_changes 2.063 +- 2.076
+unexpected_changes 1.696 +- 3.971
+gold_changes 3.694 +- 1.361
+expected_lines_changed 0.436 +- 0.496
+lines_changed_correctly_and_no_unexpected_changes 0.182 +- 0.387
+percent_expected_lines_changed 0.443 +- 0.493
+total 477
+/data/codeStyle2/data/eval_data/prompt_refactor_summary.csv
+means
+expected_changes 0.606 +- 2.05
+missing_changes 8.451 +- 5.219
+unexpected_changes 5.854 +- 14.281
+gold_changes 9.057 +- 5.134
+expected_lines_changed 0.021 +- 0.143
+lines_changed_correctly_and_no_unexpected_changes 0.003 +- 0.055
+percent_expected_lines_changed 0.07 +- 0.205
+total 335
