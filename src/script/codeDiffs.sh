@@ -3,19 +3,25 @@
 ME=$0
 DIR=`dirname $ME`
 
-INPUT=$1
-OUTPUT=$2
-EXPECTED=$3
-diff -B $INPUT $EXPECTED | gawk -f $DIR/codeDiffs.awk | sort > /tmp/expected_change.txt
+WS=`mktemp -d`
 
-diff -B $INPUT $OUTPUT | gawk -f $DIR/codeDiffs.awk  | sort > /tmp/actual_change.txt
+trap 'rm -rf $WS' EXIT
 
-missing_changes=`comm -23  /tmp/expected_change.txt  /tmp/actual_change.txt | wc -l`
+mkdir -p $WS
 
-unexpected_changes=`comm -13  /tmp/expected_change.txt  /tmp/actual_change.txt | wc -l`
+python $DIR/../normalize.py $1 >$WS/input.py
+python $DIR/../normalize.py $3 > $WS/expected.py
 
-expected_changes=`comm -12  /tmp/expected_change.txt  /tmp/actual_change.txt | wc -l`
+diff -B $WS/input.py $WS/expected.py | gawk -f $DIR/codeDiffs.awk | sort > $WS/expected_change.txt
 
-gold_expected=`cat /tmp/expected_change.txt | wc -l`
+diff -B $WS/input.py $2 | gawk -f $DIR/codeDiffs.awk  | sort > $WS/actual_change.txt
+
+missing_changes=`comm -23  $WS/expected_change.txt  $WS/actual_change.txt | wc -l`
+
+unexpected_changes=`comm -13  $WS/expected_change.txt  $WS/actual_change.txt | wc -l`
+
+expected_changes=`comm -12  $WS/expected_change.txt  $WS/actual_change.txt | wc -l`
+
+gold_expected=`cat $WS/expected_change.txt | wc -l`
 
 echo $expected_changes $missing_changes $unexpected_changes $gold_expected
