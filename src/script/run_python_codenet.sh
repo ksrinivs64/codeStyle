@@ -9,7 +9,7 @@ for DAT in $1/*/Python; do
 	    PROBLEM=`echo $p | sed 's/.*_\([^_]*\)_input.py/\1/'`
 	    for m in $DAT/${STEM}_${PROBLEM}_pred_*.py; do
 		MODEL=`echo $m | sed 's/.*_pred_\([^_]*\).py/\1/'`
-		echo $STEM $PROBLEM $MODEL $IO
+		ls ${IO}/Python/${STEM}_${PROBLEM}_pred_${MODEL}.py
 	    done
 	done
     done
