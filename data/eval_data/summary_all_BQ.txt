@@ -68,6 +68,116 @@ expected_lines_changed 0.516 +- 0.501
 lines_changed_correctly_and_no_unexpected_changes 0.367 +- 0.483
 percent_expected_lines_changed 0.721 +- 0.364
 total 248
+/data/codeStyle2/data/eval_data/codenet_casing_prompt.csv
+means
+expected_changes 4.832 +- 6.92
+missing_changes 3.41 +- 4.514
+unexpected_changes 11.917 +- 20.74
+gold_changes 8.242 +- 8.027
+expected_lines_changed 0.244 +- 0.43
+lines_changed_correctly_and_no_unexpected_changes 0.067 +- 0.251
+percent_expected_lines_changed 0.548 +- 0.371
+total 817
+/data/codeStyle2/data/eval_data/codenet_casing_t5.csv
+means
+expected_changes 8.242 +- 8.027
+missing_changes 0.0 +- 0.0
+unexpected_changes 22.99 +- 26.187
+gold_changes 8.242 +- 8.027
+expected_lines_changed 1.0 +- 0.0
+lines_changed_correctly_and_no_unexpected_changes 0.067 +- 0.251
+percent_expected_lines_changed 1.0 +- 0.0
+total 817
+/data/codeStyle2/data/eval_data/codenet_comment_prompt.csv
+means
+expected_changes nan +- nan
+missing_changes nan +- nan
+unexpected_changes nan +- nan
+gold_changes nan +- nan
+expected_lines_changed nan +- nan
+lines_changed_correctly_and_no_unexpected_changes nan +- nan
+percent_expected_lines_changed nan +- nan
+total 0
+/data/codeStyle2/data/eval_data/codenet_comment_t5.csv
+means
+expected_changes nan +- nan
+missing_changes nan +- nan
+unexpected_changes nan +- nan
+gold_changes nan +- nan
+expected_lines_changed nan +- nan
+lines_changed_correctly_and_no_unexpected_changes nan +- nan
+percent_expected_lines_changed nan +- nan
+total 0
+/data/codeStyle2/data/eval_data/codenet_decorator_prompt.csv
+means
+expected_changes 1.795 +- 2.548
+missing_changes 0.818 +- 1.846
+unexpected_changes 8.273 +- 17.251
+gold_changes 2.614 +- 2.822
+expected_lines_changed 0.659 +- 0.479
+lines_changed_correctly_and_no_unexpected_changes 0.0 +- 0.0
+percent_expected_lines_changed 0.746 +- 0.407
+total 44
+/data/codeStyle2/data/eval_data/codenet_decorator_t5.csv
+means
+expected_changes 2.614 +- 2.822
+missing_changes 0.0 +- 0.0
+unexpected_changes 65.545 +- 42.856
+gold_changes 2.614 +- 2.822
+expected_lines_changed 1.0 +- 0.0
+lines_changed_correctly_and_no_unexpected_changes 0.0 +- 0.0
+percent_expected_lines_changed 1.0 +- 0.0
+total 44
+/data/codeStyle2/data/eval_data/codenet_docstring_prompt.csv
+means
+expected_changes 0.0 +- 0.0
+missing_changes 2.464 +- 3.533
+unexpected_changes 0.0 +- 0.0
+gold_changes 2.464 +- 3.533
+expected_lines_changed 0.0 +- 0.0
+lines_changed_correctly_and_no_unexpected_changes 0.0 +- 0.0
+percent_expected_lines_changed 0.0 +- 0.0
+total 28
+/data/codeStyle2/data/eval_data/codenet_docstring_t5.csv
+means
+expected_changes 2.464 +- 3.533
+missing_changes 0.0 +- 0.0
+unexpected_changes 67.714 +- 35.539
+gold_changes 2.464 +- 3.533
+expected_lines_changed 1.0 +- 0.0
+lines_changed_correctly_and_no_unexpected_changes 0.0 +- 0.0
+percent_expected_lines_changed 1.0 +- 0.0
+total 28
+/data/codeStyle2/data/eval_data/codenet_list_comp_prompt.csv
+means
+expected_changes 0.0 +- 0.0
+missing_changes 4.776 +- 3.13
+unexpected_changes 0.016 +- 0.164
+gold_changes 4.776 +- 3.13
+expected_lines_changed 0.0 +- 0.0
+lines_changed_correctly_and_no_unexpected_changes 0.0 +- 0.0
+percent_expected_lines_changed 0.0 +- 0.0
+total 371
+/data/codeStyle2/data/eval_data/codenet_list_comp_t5.csv
+means
+expected_changes 4.776 +- 3.13
+missing_changes 0.0 +- 0.0
+unexpected_changes 38.949 +- 32.769
+gold_changes 4.776 +- 3.13
+expected_lines_changed 1.0 +- 0.0
+lines_changed_correctly_and_no_unexpected_changes 0.0 +- 0.0
+percent_expected_lines_changed 1.0 +- 0.0
+total 371
+/data/codeStyle2/data/eval_data/llama_list_comp.csv
+means
+expected_changes 3.126 +- 1.879
+missing_changes 0.637 +- 1.473
+unexpected_changes 1.084 +- 3.153
+gold_changes 3.763 +- 1.422
+expected_lines_changed 0.816 +- 0.388
+lines_changed_correctly_and_no_unexpected_changes 0.587 +- 0.493
+percent_expected_lines_changed 0.832 +- 0.369
+total 477
 /data/codeStyle2/data/eval_data/prompt_casing_summary.csv
 means
 expected_changes 2.18 +- 3.189
