@@ -15,6 +15,7 @@ if test $4="True"; then
     python $DIR/../normalize.py $2 > $WS/output.py
 else
     cp $1 $WS/input.py
+    cp $2 $WS/output.py
     cp $3 $WS/expected.py
 fi
 
