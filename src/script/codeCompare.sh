@@ -8,11 +8,7 @@ added_correctly=0
 ME=$0
 DIR=`dirname $ME`
 
-WS=`mktemp -d`
-
-trap 'rm -rf $WS' EXIT
-
-mkdir -p $WS
+WS=$4
 
 if [[ $1 =~ \.py$ ]]; then
     python $DIR/../normalize.py $1 > $WS/input 2>/dev/null
@@ -24,9 +20,9 @@ else
     cp $3 $WS/expected
 fi
 
-python ~/git/codeStyle/src/python/ndiff.py ${WS}/input ${WS}/expected | egrep '^ -' > ${WS}/expected_removals.txt
+python $DIR/../python/ndiff.py ${WS}/input ${WS}/expected | egrep '^ -' | sort > ${WS}/expected_removals.txt
 
-python ~/git/codeStyle/src/python/ndiff.py ${WS}/input ${WS}/output | egrep '^ -' > ${WS}/actual_removals.txt
+python $DIR/../python/ndiff.py ${WS}/input ${WS}/output | egrep '^ -' | sort > ${WS}/actual_removals.txt
 
 comm -23 ${WS}/expected_removals.txt ${WS}/actual_removals.txt > ${WS}/removal_diff
 
@@ -40,9 +36,9 @@ if [[ -e ${WS}/removal_diff_2 && ! -s ${WS}/removal_diff_2 ]]; then
     no_unexpected_removed=1
 fi
 
-python ~/git/codeStyle/src/python/ndiff.py ${WS}/input ${WS}/expected | egrep '^ \+' > ${WS}/expected_additions.txt
+python $DIR/../python/ndiff.py ${WS}/input ${WS}/expected | egrep '^ \+' | sort > ${WS}/expected_additions.txt
 
-python ~/git/codeStyle/src/python/ndiff.py ${WS}/input ${WS}/output | egrep '^ \+' > ${WS}/actual_additions.txt
+python $DIR/../python/ndiff.py ${WS}/input ${WS}/output | egrep '^ \+' | sort > ${WS}/actual_additions.txt
 
 comm -23 ${WS}/expected_additions.txt ${WS}/actual_additions.txt > ${WS}/addition_diff
 
