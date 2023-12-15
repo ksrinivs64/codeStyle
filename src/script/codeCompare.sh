@@ -21,7 +21,7 @@ else
     cp $3 $WS/expected
 fi
 
-if diff $WS/input $WS/expected > /dev/null; then
+if diff $1 $3 > /dev/null; then
     echo $1 "nothing to do"
 else
     python $DIR/../python/ndiff.py ${WS}/input ${WS}/expected | egrep '^ -' | sort > ${WS}/expected_removals.txt
