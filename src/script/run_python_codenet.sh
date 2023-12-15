@@ -1,5 +1,9 @@
 #!/bin/bash
 
+WS=`mktemp -d`
+
+trap 'rm -rf $WS' EXIT
+
 for DAT in $1/*/Python; do
     IO=`dirname $DAT`
     IO=`basename $IO`
@@ -9,7 +13,14 @@ for DAT in $1/*/Python; do
 	    PROBLEM=`echo $p | sed 's/.*_\([^_]*\)_input.py/\1/'`
 	    for m in $DAT/${STEM}_${PROBLEM}_pred_*.py; do
 		MODEL=`echo $m | sed 's/.*_pred_\([^_]*\).py/\1/'`
-		ls ${IO}/Python/${STEM}_${PROBLEM}_pred_${MODEL}.py
+		echo python $1/${IO}/Python/${STEM}_${PROBLEM}_pred_${MODEL}.py < $2/${IO}/input.txt 
+		python $1/${IO}/Python/${STEM}_${PROBLEM}_pred_${MODEL}.py < $2/${IO}/input.txt > ${WS}/out 2>&1
+		if diff ${WS}/out $2/${IO}/output.txt; then
+		    echo "yes"
+		else
+		    echo "no"
+		fi
+		
 	    done
 	done
     done

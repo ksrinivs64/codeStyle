@@ -9,8 +9,13 @@ trap 'rm -rf $WS' EXIT
 
 mkdir -p $WS
 
-python $DIR/../normalize.py $1 >$WS/input.py
-python $DIR/../normalize.py $3 > $WS/expected.py
+if test $4="True"; then
+    python $DIR/../normalize.py $1 >$WS/input.py
+    python $DIR/../normalize.py $3 > $WS/expected.py
+else
+    cp $1 $WS/input.py
+    cp $3 $WS/expected.py
+fi
 
 diff -B $WS/input.py $WS/expected.py | gawk -f $DIR/codeDiffs.awk | sort > $WS/expected_change.txt
 
