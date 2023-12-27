@@ -22,7 +22,7 @@ else
 fi
 
 if diff $1 $3 > /dev/null; then
-    echo $1 "nothing to do"
+    echo "-1,-1,-1,-1"
 else
     python $DIR/../python/ndiff.py ${WS}/input ${WS}/expected | egrep '^ -' | sort > ${WS}/expected_removals.txt
     
@@ -56,5 +56,5 @@ else
 	no_unexpected_added=1
     fi
 
-    echo $1 $added_correctly $removed_correctly $no_unexpected_removed $no_unexpected_added
+    echo "$added_correctly,$removed_correctly,$no_unexpected_removed,$no_unexpected_added"
 fi
