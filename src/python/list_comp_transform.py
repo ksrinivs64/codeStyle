@@ -94,28 +94,9 @@ def for_loop(text):
     return astunparse.unparse(parsed), changed_file
 
 if __name__ == "__main__":
-    import pandas as pd
-    df = pd.read_csv(sys.argv[1])
-    records_dict = []
-    for i, row in df.iterrows():
-        try:
-            with open(row['orig']) as f:
-                code = f.read()
-                transformed_code, changed_file = for_loop(code)
-                f_out = open(row['orig'][:-3]+"_transformed_uncomp.py", "w")
-                if changed_file:
-                    print("writing file changed")
-                    f_out.write("# File changed\n")
-                f_out.write(transformed_code)
-                print(row['orig'])
-                records_dict.append({'orig':row['orig'],
-                        'transform':row['orig'][:-3]+"_transformed_uncomp.py"})
-            #if i==10000:
-            #    break
-        except FileNotFoundError:
-            print("file not found", row['orig'])
-            continue
-    df_out = pd.DataFrame.from_records(records_dict)
-    df_out.to_csv("list_comp_out.csv")
-            
-
+    with open(sys.argv[1]) as f:
+        code = f.read()
+    transformed_code, changed_file = for_loop(code)
+    if changed_file:
+        with open(sys.argv[1]+"_list_comp_transform.py", "w") as f_out:
+            f_out.write(transformed_code)
