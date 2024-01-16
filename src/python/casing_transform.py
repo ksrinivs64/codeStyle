@@ -159,5 +159,6 @@ thecode = ast.fix_missing_locations(toLower.visit(thecode))
 zz = astunparse.unparse(thecode)
 
 if toLower.changed_file:
-    zz = '# File changed' + '\n' + zz
-print(zz)
+    with open(sys.argv[1] + "_casing_transform.py", "w") as f:
+        f.write(zz)
+

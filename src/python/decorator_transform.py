@@ -1,49 +1,49 @@
 import ast
-import pandas as pd
-from tqdm import tqdm
 import os
 import sys
 import astunparse
-class toFuncLower(ast.NodeTransformer):
+
+
+class RemoveDecorator(ast.NodeTransformer):
     def visit_FunctionDef(self, node):
+        print(node.name)
+        print(node.decorator_list)
         node.decorator_list = []
+        self.generic_visit(node)
         return node
     def visit_AsyncFunctionDef(self, node):
+        print(node.name)
+        print(node.decorator_list)
         node.decorator_list = []
+        self.generic_visit(node)
         #print("async decorators stripped")
         return node
     def visit_ClassDef(self, node):
+        print(node.name)
         node.decorator_list = []
         #print("async classes")
+        self.generic_visit(node)
         return node    
         # return ast.FunctionDef(**{**node.__dict__, 'name':node.name.lower().replace("_","")})
 
-
 def remove_decorator(input_code):
-    try:
-        parsed = ast.parse(input_code)
-        parsed_code = astunparse.unparse(parsed)
-        final_code = astunparse.unparse(toFuncLower().visit(parsed))
-        if parsed_code == final_code:
-            return None
-    except SyntaxError:
-        return None
-    except RecursionError:
-        return None
-    except TypeError:
-        return None
-    except ValueError:
-        return None
+    decorators = False
+    parsed = ast.parse(input_code)
+    parsed_code = astunparse.unparse(parsed)
+    final_code = astunparse.unparse(RemoveDecorator().visit(parsed))
+    if parsed_code == final_code:
+        return input_code, decorators
 
-    return final_code
+    decorators = True
+    return final_code, decorators
 
 
 if __name__ == "__main__":
-    processed_scripts = []
-    data_input = pd.read_csv(sys.argv[1])
-    print("Length of input data : ", len(data_input))
-    for data in tqdm(data_input["content"]):
-        processed_script = remove_decorator(data)
-        processed_scripts.append(processed_script)
-    data_input["decorator_modified"] = processed_scripts
-    data_input.to_csv("transformed_no_decorators.csv")
+    with open(sys.argv[1]) as f:
+        code = f.read()
+        processed_script, decorators = remove_decorator(code)
+        if decorators:
+            with open(sys.argv[1] + "_decorator_transform.py", "w") as f:
+                f.write(processed_script)
+
+        
