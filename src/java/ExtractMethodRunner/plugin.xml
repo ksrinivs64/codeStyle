@@ -20,5 +20,14 @@
          </run>
       </application>
    </extension>
+   <extension 
+         id="deleteAnnotations"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run 
+               class="extractmethodrunner.DeleteAnnotationsApplication">
+         </run>
+      </application>
+   </extension>
 
 </plugin>
